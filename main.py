@@ -1,42 +1,76 @@
 import os
 import shutil
+import tkinter as tk
+from tkinter import filedialog, messagebox, scrolledtext
 
-# Define categories and their file extensions
+# Expanded categories and file extensions
 folders = {
-    "Images": [".jpg", ".jpeg", ".png", ".gif"],
-    "Documents": [".pdf", ".docx", ".txt", ".xlsx"],
-    "Code": [".py", ".js", ".html", ".css"],
-    "Archives": [".zip", ".rar", ".7z"]
+    "Images": [".jpg", ".jpeg", ".png", ".gif", ".webp"],
+    "Documents": [".pdf", ".docx", ".txt", ".xlsx", ".doc", ".pptx"],
+    "Code": [".py", ".js", ".html", ".css", ".cpp", ".json"],
+    "Archives": [".zip", ".rar", ".7z", ".tar", ".gz"],
+    "Audio": [".mp3", ".wav", ".flac", ".aac"],
+    "Videos": [".mp4", ".mkv", ".mov", ".avi"],
+    "Data": [".csv", ".sql", ".db"]
 }
 
-# Get the folder path from the user
-target_dir = input("Enter the path of the folder to organize: ").strip('"\'')
-
-if os.path.exists(target_dir):
-    os.chdir(target_dir)
+def organize_files():
+    target_dir = filedialog.askdirectory(title="Select Folder to Organize")
+    if not target_dir:
+        return
     
-    # Loop through every file in the directory
-    for filename in os.listdir():
-        # Skip folders and this script itself
-        if os.path.isdir(filename) or filename == "main.py":
-            continue
-            
-        # Get the file extension
-        _, file_ext = os.path.splitext(filename)
-        file_ext = file_ext.lower()
+    # Clear log and show start message
+    log_box.delete("1.0", tk.END)
+    log_box.insert(tk.END, f"Starting organization in:\n{target_dir}\n" + "-"*48 + "\n")
+    root.update()
+    
+    try:
+        os.chdir(target_dir)
+        moved_count = 0
         
-        # Check which category the extension belongs to
-        for category, extensions in folders.items():
-            if file_ext in extensions:
-                # Create the category folder if it doesn't exist yet
-                if not os.path.exists(category):
-                    os.mkdir(category)
-                    
-                # Move the file into the folder
-                shutil.move(filename, os.path.join(category, filename))
-                print(f"Moved: {filename} -> {category}/")
-                break
+        for filename in os.listdir():
+            if os.path.isdir(filename) or filename == "main.py":
+                continue
                 
-    print("\nFile organization complete!")
-else:
-    print("Error: That folder path does not exist.")
+            _, file_ext = os.path.splitext(filename)
+            file_ext = file_ext.lower()
+            
+            for category, extensions in folders.items():
+                if file_ext in extensions:
+                    if not os.path.exists(category):
+                        os.mkdir(category)
+                    shutil.move(filename, os.path.join(category, filename))
+                    
+                    # Print live update to the app's log window
+                    log_box.insert(tk.END, f"Moved: {filename} -> {category}/\n")
+                    log_box.see(tk.END)
+                    root.update()
+                    
+                    moved_count += 1
+                    break
+                    
+        log_box.insert(tk.END, "-"*48 + f"\nDone! Successfully organized {moved_count} files.\n")
+        messagebox.showinfo("Success!", f"Organized {moved_count} files successfully!")
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {e}")
+
+# Build the Pro desktop app window
+root = tk.Tk()
+root.title("File Organizer Pro")
+root.geometry("500x440")
+root.configure(bg="#f7f7f7")
+
+# Header
+title_label = tk.Label(root, text="File Organizer Pro", font=("Arial", 16, "bold"), bg="#f7f7f7", fg="#333")
+title_label.pack(pady=15)
+
+# Action Button
+select_button = tk.Button(root, text="Select Folder & Organize", font=("Arial", 11, "bold"), bg="#2563eb", fg="white", padx=15, pady=8, bd=0, cursor="hand2", command=organize_files)
+select_button.pack(pady=5)
+
+# Live Activity Log Box (Terminal style)
+log_box = scrolledtext.ScrolledText(root, width=56, height=15, font=("Consolas", 9), bg="#1e1e1e", fg="#00ff00")
+log_box.pack(pady=15)
+
+# Start application loop
+root.mainloop()
