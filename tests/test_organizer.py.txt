@@ -1,0 +1,11 @@
+import os
+import json
+
+def test_config_loading():
+    """Ensure config.json contains required structural keys."""
+    assert os.path.exists("config.json"), "config.json is missing!"
+    with open("config.json", "r") as f:
+        data = json.load(f)
+    assert "categories" in data
+    assert "junk_extensions" in data
+    assert isinstance(data["categories"], dict)

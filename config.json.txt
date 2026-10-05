@@ -1,0 +1,13 @@
+{
+  "categories": {
+    "Images": [".jpg", ".jpeg", ".png", ".gif", ".webp"],
+    "Documents": [".pdf", ".docx", ".txt", ".xlsx", ".doc", ".pptx"],
+    "Code": [".py", ".js", ".html", ".css", ".cpp", ".json"],
+    "Archives": [".zip", ".rar", ".7z", ".tar", ".gz"],
+    "Audio": [".mp3", ".wav", ".flac", ".aac"],
+    "Videos": [".mp4", ".mkv", ".mov", ".avi"],
+    "Data": [".csv", ".sql", ".db"]
+  },
+  "junk_extensions": [".tmp", ".log", ".bak", ".old"],
+  "trash_days_threshold": 90
+}
