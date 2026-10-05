@@ -1,16 +1,19 @@
-# Python File Organizer
+# File Organizer Pro
 
-A lightweight, automated command-line utility written in Python to keep your directories clean and organized by sorting files into categorized folders based on their extensions.
+A desktop file management and safe quarantine utility built with Python and Tkinter.
 
 ## Features
-* Automatically detects common file types (Images, Documents, Code, Archives).
-* Creates category directories on the fly.
-* Safely moves files to their designated folders.
 
-## How to Run
+- **Config-Driven:** Loads file categories, extensions, and rules from an external `config.json` file.
+- **Dual Undo Controls:** Independent buttons to instantly revert recent organize or cleanup actions.
+- **Safe Quarantine:** Isolates temporary and junk files into a quarantine folder instead of permanent deletion.
+- **Automated Deployment:** Automatically drops a desktop shortcut (`.lnk`) on first run using `winshell`.
+- **Activity Logging:** Tracks events and timestamps in a local `app.log` file.
+- **Dark-Slate GUI:** Clean, modern interface designed for local utility tasks.
 
-1. Make sure you have Python installed on your computer.
-2. Download or clone this repository.
-3. Open your terminal or command prompt, navigate to the folder, and run:
-   ```bash
-   python main.py
+## Requirements
+
+- Python 3.x
+- Dependencies:
+  ```bash
+  pip install winshell pywin32
